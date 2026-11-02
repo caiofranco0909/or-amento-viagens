@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Monte o seu site de viagens</title>
+<style>
+:root{--bg:#f7f6f2;--card:#fff;--tx:#1d1d1b;--mut:#6b6a63;--bd:#e2e0d8;--ac:#0f6e56;--acbg:#e1f5ee;--ac-tx:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161614;--card:#21211e;--tx:#ecebe4;--mut:#a3a29a;--bd:#38372f;--ac:#3ccb9f;--acbg:#12372c;--ac-tx:#06231b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#161614;--card:#21211e;--tx:#ecebe4;--mut:#a3a29a;--bd:#38372f;--ac:#3ccb9f;--acbg:#12372c;--ac-tx:#06231b;color-scheme:dark}
+*{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:84px}
+.wrap{max-width:1040px;margin:0 auto;padding:20px 16px;display:grid;gap:20px}
+h1{font-size:26px;margin:0 0 6px}h2{font-size:15px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin:24px 0 8px}
+p.lead{color:var(--mut);margin:0 0 14px}
+.presets{display:flex;flex-wrap:wrap;gap:8px}
+button.pre{background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:10px 14px;font:inherit;cursor:pointer;text-align:left}
+button.pre b{display:block}button.pre span{font-size:13px;color:var(--mut)}
+button.pre:hover{border-color:var(--ac)}
+.item{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer}
+.item.on{border-color:var(--ac);background:var(--acbg)}
+.item input{margin-top:5px;width:18px;height:18px;accent-color:var(--ac);flex:none}
+.item .t{flex:1;min-width:0}.item .n{font-weight:600}.item .d,.item .r{font-size:13px;color:var(--mut)}
+.item .p{font-weight:600;white-space:nowrap}
+.item.lock{cursor:default}.item.lock input{opacity:.6}
+.badge{display:inline-block;font-size:11px;font-weight:600;background:var(--ac);color:var(--ac-tx);border-radius:6px;padding:1px 7px;margin-left:6px;vertical-align:middle}
+.sum{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px}
+.sum h3{margin:0 0 10px;font-size:17px}
+.row{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding:3px 0}
+.row.sub{color:var(--mut)}.row.tot{font-size:20px;font-weight:700;border-top:1px solid var(--bd);margin-top:8px;padding-top:10px}
+.note{font-size:13px;color:var(--ac);min-height:20px;margin-top:8px}
+.fine{font-size:12px;color:var(--mut);margin-top:10px}
+#send{border-top:1px solid var(--bd);margin-top:14px;padding-top:12px}
+.cli{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);margin-top:8px}
+button.send{width:100%;margin-top:10px;padding:12px;border:0;border-radius:10px;background:var(--ac);color:var(--ac-tx);font:inherit;font-weight:700;cursor:pointer}
+button.alt{width:100%;margin-top:8px;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit;cursor:pointer}
+#bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--bd);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));display:flex;justify-content:space-between;align-items:center;font-weight:700}
+#bar small{font-weight:400;color:var(--mut)}
+@media(min-width:900px){.wrap{grid-template-columns:1fr 320px;align-items:start}.sum{position:sticky;top:16px}#bar{display:none}body{padding-bottom:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<main>
+<h1>Monte o seu site de viagens</h1>
+<p class="lead">Escolha as telas e módulos que fazem sentido para o seu negócio. O valor é atualizado na hora. Os itens marcados como essenciais já estão incluídos, pois sem eles o sistema não funciona. Itens que dependem de outros são adicionados automaticamente.</p>
+<div class="presets" id="presets"></div>
+<div id="cat"></div>
+</main>
+<aside class="sum"><div id="sum"></div><div id="send"><h3>Enviar para análise</h3><input class="cli" id="cn" placeholder="Seu nome"><input class="cli" id="cc" placeholder="Seu e-mail ou WhatsApp para contato"><input class="cli" id="co" placeholder="Observações (opcional)"><button class="send" id="bsend">Enviar orçamento</button><button class="alt" id="bcopy">Copiar resumo</button><textarea class="cli" id="cx" rows="8" readonly style="display:none"></textarea><div class="note" id="st"></div></div></aside>
+</div>
+<div id="bar" onclick="document.getElementById('send').scrollIntoView({behavior:'smooth'})"><span>Total único <small id="barm"></small></span><span id="bart"></span></div>
+<script>
+// Ajuste aqui os valores fixos
+var WEB3_KEY = "COLE_SUA_CHAVE_AQUI"; // chave pública do Web3Forms (web3forms.com)
+var ORG_EMAIL = "caiofranco246@gmail.com"; // e-mail que recebe o orçamento
+var BASE = 1500;     // base técnica (banco, API, autenticação, deploy)
+var MONTHLY = 150;   // hospedagem + manutenção por mês
+
+var GROUPS = [
+ {t:"Páginas públicas", items:[
+  {id:"home",n:"Homepage",d:"Apresentação da agência e destaques das viagens.",p:500},
+  {id:"list",n:"Lista de viagens",d:"Cards com destino, data e vagas restantes.",p:500},
+  {id:"trip",n:"Página da viagem",d:"Detalhes, roteiro, preço e botão de inscrição.",p:700},
+  {id:"gallery",n:"Galeria e depoimentos",d:"Fotos e relatos de viajantes anteriores.",p:300},
+  {id:"about",n:"Quem somos",d:"Página estática.",p:150},
+  {id:"contact",n:"Contato",d:"Página estática com canais de contato.",p:150},
+  {id:"faq",n:"Perguntas frequentes",d:"Página estática.",p:150},
+  {id:"legal",n:"Termos e privacidade",d:"Página estática.",p:150}]},
+ {t:"Fluxo do viajante", items:[
+  {id:"signup",n:"Formulário de inscrição",d:"Dados do viajante e acompanhantes, com validações.",p:1000},
+  {id:"checkout",n:"Checkout e pagamento",d:"Integração com gateway, Pix/cartão e bloqueio de vaga.",p:1000,r:["signup"]},
+  {id:"confirm",n:"Confirmação da reserva",d:"Resumo após inscrição ou pagamento.",p:150,r:["signup"]},
+  {id:"status",n:"Consulta de status da reserva",d:"O viajante acompanha pagamento e dados por link.",p:500,r:["signup"]}]},
+ {t:"Dashboard do organizador", items:[
+  {id:"login",n:"Login",d:"Acesso restrito ao organizador.",p:150},
+  {id:"attendees",n:"Inscritos e vagas",d:"Lista por viagem, vagas ocupadas e filtros.",p:800,r:["login","signup"]},
+  {id:"trips",n:"Gerenciar viagens",d:"Criar e editar viagens, vagas, preço e link de inscrição.",p:700,r:["login"]},
+  {id:"payments",n:"Pagamentos",d:"Pendentes, pagos e reembolsos.",p:700,r:["login","checkout"]},
+  {id:"overview",n:"Visão geral",d:"Métricas e resumo das viagens ativas.",p:700,r:["login","attendees"]},
+  {id:"reports",n:"Relatórios e exportação",d:"Exportação em CSV e relatórios por viagem.",p:500,r:["login","attendees"]}]},
+ {t:"Módulos extras (não são telas)", items:[
+  {id:"email",n:"E-mail automático de confirmação",d:"Disparado após inscrição e pagamento.",p:400,r:["signup"]},
+  {id:"reminder",n:"Lembrete de pagamento",d:"Aviso automático para pagamentos pendentes.",p:400,r:["email","checkout"]},
+  {id:"whats",n:"Notificação por WhatsApp",d:"Mensagens automáticas ao viajante.",p:600,r:["signup"]},
+  {id:"receipt",n:"Recibo em PDF",d:"Gerado após a confirmação do pagamento.",p:300,r:["checkout"]}]}
+];
+var PRESETS = [
+ {n:"Mínimo",ids:[],d:"Só o essencial, sem vitrine"},
+ {n:"Padrão",ids:["signup","checkout","confirm","login","attendees","home","about","contact","list","overview","trips","payments"],d:"Presença básica e gestão"},
+ 
+];
+var ESS = ["signup","checkout","confirm","login","attendees"]; // itens essenciais, sempre incluídos
+var BY = {}, SEL = {}, NOTE = "";
+GROUPS.forEach(function(g){g.items.forEach(function(i){i.mod = g.t.indexOf("Módulos")===0; i.r = i.r||[]; BY[i.id]=i;});});
+
+function brl(v){return v.toLocaleString("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0});}
+function add(id,added){if(SEL[id])return;SEL[id]=true;if(added)added.push(id);BY[id].r.forEach(function(r){add(r,added);});}
+function rem(id){if(!SEL[id]||ESS.indexOf(id)>-1)return;delete SEL[id];Object.keys(BY).forEach(function(k){if(SEL[k]&&BY[k].r.indexOf(id)>-1)rem(k);});}
+function toggle(id){
+ NOTE="";
+ if(ESS.indexOf(id)>-1)return;
+ if(SEL[id]){var before=Object.keys(SEL).length;rem(id);var n=before-Object.keys(SEL).length-1;if(n>0)NOTE="Também removidos "+n+" item(ns) que dependiam deste.";}
+ else{var a=[];add(id,a);a=a.filter(function(x){return x!==id;});if(a.length)NOTE="Adicionado automaticamente: "+a.map(function(x){return BY[x].n;}).join(", ")+".";}
+ render();
+}
+function setPreset(ids){NOTE="";SEL={};ESS.concat(ids).forEach(function(i){add(i);});render();}
+function presetPrice(ids){var s={},t=BASE;ids.concat(ESS).forEach(function(i){(function a(x){if(s[x])return;s[x]=1;t+=BY[x].p;BY[x].r.forEach(a);})(i);});return t;}
+
+function summaryText(){
+ var nm=document.getElementById("cn").value.trim(),ob=document.getElementById("co").value.trim(),ct=document.getElementById("cc").value.trim();
+ var sl=[],ml=[],sc=0,mo=0;
+ GROUPS.forEach(function(g){g.items.forEach(function(i){if(!SEL[i.id])return;var l="- "+i.n+": "+brl(i.p);if(i.mod){ml.push(l);mo+=i.p;}else{sl.push(l);sc+=i.p;}});});
+ var t="Orçamento – site de viagens\n"+(nm?"Cliente: "+nm+"\n":"")+(ct?"Contato: "+ct+"\n":"")+"\nBase técnica: "+brl(BASE)+"\n\nTelas ("+sl.length+"): "+brl(sc)+"\n"+sl.join("\n")+"\n";
+ if(ml.length)t+="\nMódulos extras: "+brl(mo)+"\n"+ml.join("\n")+"\n";
+ t+="\nTotal único: "+brl(BASE+sc+mo)+"\nManutenção mensal: "+brl(MONTHLY)+"/mês\n";
+ if(ob)t+="\nObservações: "+ob+"\n";
+ return t;
+}
+function status(m){document.getElementById("st").textContent=m;}
+
+function render(){
+ var h="";
+ GROUPS.forEach(function(g,gi){
+  h+="<h2>"+g.t+"</h2>";
+  g.items.forEach(function(i){
+   var on=!!SEL[i.id],lk=ESS.indexOf(i.id)>-1;
+   h+='<label class="item'+(on?" on":"")+(lk?" lock":"")+'"><input type="checkbox" data-id="'+i.id+'"'+(on?" checked":"")+(lk?" disabled":"")+'><span class="t"><div class="n">'+i.n+(lk?'<span class="badge">Essencial</span>':"")+'</div><div class="d">'+i.d+'</div>'+(i.r.length?'<div class="r">Requer: '+i.r.map(function(r){return BY[r].n;}).join(", ")+'</div>':"")+'</span><span class="p">'+brl(i.p)+'</span></label>';
+  });
+ });
+ document.getElementById("cat").innerHTML=h;
+ document.querySelectorAll("#cat input").forEach(function(el){el.addEventListener("change",function(){toggle(el.getAttribute("data-id"));});});
+
+ var screens=0,mods=0,sl="",ml="",ns=0;
+ GROUPS.forEach(function(g){g.items.forEach(function(i){
+  if(!SEL[i.id])return;
+  var line='<div class="row sub"><span>'+i.n+'</span><span>'+brl(i.p)+'</span></div>';
+  if(i.mod){mods+=i.p;ml+=line;}else{screens+=i.p;sl+=line;ns++;}
+ });});
+ var total=BASE+screens+mods;
+ var s='<h3>Resumo do orçamento</h3>';
+ s+='<div class="row"><span>Base técnica</span><span>'+brl(BASE)+'</span></div>';
+ s+='<div class="row"><b>Telas ('+ns+')</b><b>'+brl(screens)+'</b></div>'+(sl||'<div class="row sub"><span>Nenhuma tela selecionada</span></div>');
+ if(mods)s+='<div class="row"><b>Módulos extras</b><b>'+brl(mods)+'</b></div>'+ml;
+ s+='<div class="row tot"><span>Total único</span><span>'+brl(total)+'</span></div>';
+ s+='<div class="row sub"><span>Manutenção mensal</span><span>'+brl(MONTHLY)+'/mês</span></div>';
+ s+='<div class="note">'+NOTE+'</div>';
+ s+='<div class="fine">Valores de referência. Hospedagem, domínio e taxas do gateway de pagamento não estão incluídos.</div>';
+ document.getElementById("sum").innerHTML=s;
+ document.getElementById("bart").textContent=brl(total);
+ document.getElementById("barm").textContent="+ "+brl(MONTHLY)+"/mês";
+}
+
+(function init(){
+ var p="";
+ PRESETS.forEach(function(x,i){p+='<button class="pre" data-i="'+i+'"><b>'+x.n+" · "+brl(presetPrice(x.ids))+'</b><span>'+x.d+'</span></button>';});
+ document.getElementById("presets").innerHTML=p;
+ document.querySelectorAll("button.pre").forEach(function(b){b.addEventListener("click",function(){setPreset(PRESETS[+b.getAttribute("data-i")].ids);});});
+ setPreset(PRESETS[0].ids);
+ document.getElementById("bsend").addEventListener("click",function(){
+  var nm=document.getElementById("cn").value.trim(),btn=this;
+  if(!document.getElementById("cc").value.trim()){status("Informe um e-mail ou WhatsApp para contato.");return;}
+  if(WEB3_KEY.indexOf("COLE")===0){status("Configure a chave do Web3Forms no código.");return;}
+  btn.disabled=true;status("Enviando…");
+  fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({access_key:WEB3_KEY,subject:"Orçamento – site de viagens"+(nm?" – "+nm:""),from_name:nm||"Cliente",message:summaryText()})})
+  .then(function(r){return r.json();})
+  .then(function(d){if(!d.success)throw new Error();status("Orçamento enviado! Entraremos em contato em breve.");})
+  .catch(function(){status("Não foi possível enviar. Use “Copiar resumo” e envie para "+ORG_EMAIL+".");})
+  .then(function(){btn.disabled=false;});
+ });
+ document.getElementById("bcopy").addEventListener("click",function(){
+  var t=summaryText(),cx=document.getElementById("cx");
+  function manual(){cx.style.display="block";cx.value=t;cx.focus();cx.select();status("Copie o texto acima e envie para "+ORG_EMAIL+".");}
+  try{navigator.clipboard.writeText(t).then(function(){cx.style.display="none";status("Resumo copiado. Cole no e-mail e envie para "+ORG_EMAIL+".");},manual);}catch(e){manual();}
+ });
+})();
+</script>
+</body>
+</html>
