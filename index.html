@@ -35,6 +35,17 @@ button.pre:hover{border-color:var(--ac)}
 .cli{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);margin-top:8px}
 button.send{width:100%;margin-top:10px;padding:12px;border:0;border-radius:10px;background:var(--ac);color:var(--ac-tx);font:inherit;font-weight:700;cursor:pointer}
 button.alt{width:100%;margin-top:8px;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit;cursor:pointer}
+.info{max-width:1040px;margin:0 auto;padding:0 16px 28px}
+.info h2{font-size:20px;text-transform:none;letter-spacing:0;color:var(--tx);margin:28px 0 8px}
+.info .box{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:12px}
+.info h3{font-size:15px;margin:0 0 8px}
+.info ol,.info ul{margin:0;padding-left:20px}.info li{margin-bottom:8px}.info li:last-child{margin-bottom:0}
+.cols{display:grid;gap:12px}
+@media(min-width:700px){.cols{grid-template-columns:1fr 1fr}}
+.cr{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-top:1px solid var(--bd)}
+.cr:first-of-type{border-top:0;padding-top:0}
+.cr b{display:block}.cr span{font-size:13px;color:var(--mut)}.cr em{font-style:normal;font-size:13px;color:var(--mut);text-align:right;white-space:nowrap}
+.warn{border-left:3px solid var(--ac)}
 #bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--bd);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));display:flex;justify-content:space-between;align-items:center;font-weight:700}
 #bar small{font-weight:400;color:var(--mut)}
 @media(min-width:900px){.wrap{grid-template-columns:1fr 320px;align-items:start}.sum{position:sticky;top:16px}#bar{display:none}body{padding-bottom:0}}
@@ -50,6 +61,41 @@ button.alt{width:100%;margin-top:8px;padding:10px;border:1px solid var(--bd);bor
 </main>
 <aside class="sum"><div id="sum"></div><div id="send"><h3>Enviar para análise</h3><input class="cli" id="cn" placeholder="Seu nome"><input class="cli" id="cc" placeholder="Seu e-mail ou WhatsApp para contato"><input class="cli" id="co" placeholder="Observações (opcional)"><button class="send" id="bsend">Enviar orçamento</button><button class="alt" id="bcopy">Copiar resumo</button><textarea class="cli" id="cx" rows="8" readonly style="display:none"></textarea><div class="note" id="st"></div></div></aside>
 </div>
+<section class="info">
+<h2>Como funciona o pacote Mínimo no dia a dia</h2>
+<p class="lead">O Mínimo entrega o essencial para sair da organização manual: o viajante se inscreve e paga sozinho, e você acompanha tudo em um painel. Não há vitrine (homepage ou lista de viagens): você divulga diretamente o link de cada viagem.</p>
+<div class="box"><ol>
+<li><b>Preparar a viagem.</b> Destino, datas, preço e número de vagas são cadastrados por nós, a pedido. Cada viagem recebe um link próprio de inscrição.</li>
+<li><b>Divulgar.</b> Você envia o link por WhatsApp, Instagram ou onde preferir.</li>
+<li><b>Inscrição.</b> O viajante abre o link, preenche os próprios dados (e os de acompanhantes, se houver) e segue para o pagamento.</li>
+<li><b>Pagamento.</b> Ele paga online pelos meios disponíveis no gateway escolhido. A vaga fica reservada durante o pagamento, para que duas pessoas não fiquem com a última vaga.</li>
+<li><b>Confirmação.</b> Uma tela confirma a inscrição. O envio da confirmação por e-mail ou WhatsApp é um módulo extra.</li>
+<li><b>Controle de vagas.</b> As vagas restantes diminuem automaticamente. Quando esgotam, o link deixa de aceitar inscrições.</li>
+<li><b>Acompanhamento.</b> No dashboard, com login, você vê por viagem quem se inscreveu, os dados preenchidos, a situação do pagamento (pago ou pendente) e quantas vagas restam.</li>
+</ol></div>
+<div class="cols">
+<div class="box"><h3>O que você deixa de fazer</h3><ul>
+<li>Receber dados por mensagem e digitar em planilha.</li>
+<li>Conferir comprovantes de pagamento um a um.</li>
+<li>Contar vagas manualmente.</li></ul></div>
+<div class="box"><h3>O que continua manual no Mínimo</h3><ul>
+<li>Cadastrar ou editar viagens: pedir a nós, ou fazer sozinho com a tela “Gerenciar viagens”.</li>
+<li>Avisar os viajantes: confirmação e lembretes dependem dos módulos extras.</li>
+<li>Reembolsos: feitos direto no painel do gateway de pagamento.</li>
+<li>Relatórios e exportação de dados: tela extra do catálogo.</li></ul></div>
+</div>
+
+<h2>Custos extras fora do desenvolvimento</h2>
+<p class="lead">Os valores deste orçamento cobrem o desenvolvimento e a configuração do site. Os itens abaixo são serviços de terceiros, necessários para o site funcionar. Nós os configuramos, mas eles são contratados em nome do cliente e pagos diretamente ao fornecedor, por isso não entram no total.</p>
+<div class="box">
+<div class="cr"><div><b>Domínio</b><span>O endereço do site (por exemplo, seusite.com.br).</span></div><em>anual</em></div>
+<div class="cr"><div><b>Hospedagem do sistema</b><span>Servidor onde o site, o banco de dados e o dashboard ficam no ar.</span></div><em>mensal ou anual</em></div>
+<div class="cr"><div><b>Taxas do gateway de pagamento</b><span>Cobradas pela operadora sobre cada pagamento recebido, e descontadas dos valores que você recebe.</span></div><em>por transação</em></div>
+<div class="cr"><div><b>Envio de e-mails e WhatsApp</b><span>Apenas se contratar os módulos extras de notificação, conforme o volume de mensagens.</span></div><em>conforme uso</em></div>
+<div class="cr"><div><b>Certificado de segurança (HTTPS)</b><span>Normalmente gratuito, e instalado por nós na configuração.</span></div><em>geralmente gratuito</em></div>
+</div>
+<div class="box warn">Os valores variam conforme o fornecedor e o plano escolhido. Antes de contratar, apresentamos as opções com estimativas. A manutenção mensal mostrada no resumo remunera o nosso trabalho de suporte e atualizações, e não substitui esses custos.</div>
+</section>
 <div id="bar" onclick="document.getElementById('send').scrollIntoView({behavior:'smooth'})"><span>Total único <small id="barm"></small></span><span id="bart"></span></div>
 <script>
 // Ajuste aqui os valores fixos
